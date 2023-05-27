@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
 
-function App() {
+const App = () => {
+  const postsUrl = "https://jsonplaceholder.typicode.com/posts";
+  const todosUrl = "https://jsonplaceholder.typicode.com/todos";
+  const [data, setData] = useState([]);
+  const [requestedUrl, setRequestedUrl] = useState("");
+
+  useEffect(() => {
+    if (requestedUrl) {
+      fetch(requestedUrl)
+        .then((response) => response.json())
+        .then((data) => setData(data))
+        .catch((error) => console.log(error));
+    }
+  }, [requestedUrl]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h1>Data Fetching Demo</h1>
+      <div className="buttons">
+        <button onClick={() => setRequestedUrl(postsUrl)}>Fetch Posts</button>
+        <button onClick={() => setRequestedUrl(todosUrl)}>Fetch Todos</button>
+      </div>
+
+      <h2>Requested Data:</h2>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>{item.title || item.name}</li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;
